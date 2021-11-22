@@ -1,16 +1,18 @@
-template>
-  <div>
+<template>
+  <div v-if="posts.length > 0">
     <h3>Список пользователей</h3>
     <PostItem
-        :post="post"
         v-for="post in posts"
+        :post="post"
+        :key="post.id"
+        @remove="$emit('remove', post)"
     />
   </div>
-
+  <h2 v-else >Список пользоватей пуст</h2>
 </template>
 
 <script>
-import PostItem from "@/components/PostItem";
+import PostItem from "@/components/PostItem"
 export default {
   components: {PostItem},
   props: {
@@ -23,5 +25,10 @@ export default {
 </script>
 
 <style scoped>
-
+h2 {
+  color: maroon;
+}
+h3 {
+  margin-bottom: 20px;
+}
 </style>

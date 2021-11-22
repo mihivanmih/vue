@@ -2,12 +2,12 @@
   <h4>Создание поста</h4>
   <form @submit.prevent>
     <MyInput
-        v-model="post.title"
+        v-model:value="post.title"
         type="text"
         placeholder="Название"
     />
     <MyInput
-        v-model="post.body"
+        v-model:value="post.body"
         type="text"
         placeholder="Описание"
     />

@@ -1,7 +1,9 @@
-import MyButton from "@/components/UI/MyButton";
-import MyInput from "@/components/UI/MyInput";
+import MyDialog from "./MyDialog"
+import MyButton from "./MyButton"
+import MyInput from "./MyInput"
 
 export default [
     MyButton,
-    MyInput
+    MyInput,
+    MyDialog
 ]
