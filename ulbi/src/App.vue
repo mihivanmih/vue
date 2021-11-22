@@ -2,7 +2,6 @@
   <div class="app">
 
     <h1>Страница с постами</h1>
-    <input type="text" v-model.trim="modificatorValue">
 
     <MyButton
       class="user_button"
@@ -20,27 +19,29 @@
     <PostList
         :posts="posts"
         @remove="removePost"
+        v-if="!isPostsLoading"
     />
+    <div v-else>Идет загрузка...</div>
   </div>
 </template>
 
 <script>
 import PostFom from "@/components/PostFom"
 import PostList from "@/components/PostList"
+import axios from "axios"
+import MyButton from "@/components/UI/MyButton";
 
 export default {
   components: {
+    MyButton,
     PostList, PostFom
   },
   data() {
     return {
-      posts: [
-        {id: 1, title: 'JavaScript 1', body: 'Описание поста 1'},
-        {id: 2, title: 'JavaScript 2', body: 'Описание поста 2'},
-        {id: 3, title: 'JavaScript 3', body: 'Описание поста 3'}
-      ],
-      dialogVisible: false,
-      modificatorValue: ''
+      posts: [], // посты
+      dialogVisible: false, // диалоговое окно закрыто
+      modificatorValue: '', // модификатор который не используется
+      isPostsLoading: false
     }
   },
   methods: {
@@ -53,7 +54,21 @@ export default {
     },
     showDialog(){
       this.dialogVisible = true
+    },
+    async fetchPosts() {
+      try {
+        this.isPostsLoading = true
+        const response = await axios.get("https://jsonplaceholder.typicode.com/posts?_limit=10")
+        this.posts = response.data
+      } catch (e) {
+        alert("Ошибка")
+      } finally {
+        this.isPostsLoading = false
+      }
     }
+  },
+  mounted() {
+    this.fetchPosts()
   }
 }
 </script>
