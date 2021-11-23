@@ -3,10 +3,9 @@
 
     <h1>Страница с постами</h1>
     <MyInput
-      v-model:value="searchQuery"
-      placeholder="Поиск..."
+        v-model:value="searchQuery"
+        placeholder="Поиск..."
     />
-
     <div class="app__btns">
       <MyButton
           class="user_button"
@@ -140,7 +139,7 @@ export default {
 }
 .app__btns {
   display: flex;
-  margin: 20px 0;
+  margin: 0 0 20px 0;
   justify-content: space-between;
 }
 h1 {
