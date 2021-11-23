@@ -34,17 +34,14 @@
         v-if="!isPostsLoading"
     />
     <div v-else>Идет загрузка...</div>
-    <div class="page__wrapper">
-      <div
-          v-for="pageNumber in totalPages"
-          :key="pageNumber"
-          class="page"
-          :class="{
-            'current-page': page === pageNumber
-          }"
-          @click="changePage(pageNumber)"
-      >{{ pageNumber }}</div>
-    </div>
+
+    <Paginations
+      :pageNumber = "0"
+      :page = page
+      :totalPages = totalPages
+      @pageNumber="changePage"
+    />
+
   </div>
 </template>
 
@@ -54,9 +51,11 @@ import PostList from "@/components/PostList"
 import axios from "axios"
 import MyButton from "@/components/UI/MyButton";
 import MyInput from "@/components/UI/MyInput";
+import Paginations from "@/components/Paginations";
 
 export default {
   components: {
+    Paginations,
     MyInput,
     MyButton,
     PostList, PostFom
@@ -90,6 +89,7 @@ export default {
       this.dialogVisible = true
     },
     changePage(pageNumber){
+      console.log("pageNumber", pageNumber)
       this.page = pageNumber
     },
     async fetchPosts() {
@@ -118,7 +118,6 @@ export default {
       return [...this.posts].sort((post1, post2) =>  post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
     },
     sortedAndSearchedPosts() {
-      console.log("this.searchQuery", this.searchQuery)
       return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
     }
   },
@@ -146,16 +145,5 @@ export default {
 }
 h1 {
   margin-bottom: 20px;
-}
-.page__wrapper {
-  display: flex;
-  margin-top: 20px;
-}
-.page {
-  border:  1px solid #ccc;
-  padding: 10px;
-}
-.current-page {
-  border:  2px solid limegreen;
 }
 </style>
