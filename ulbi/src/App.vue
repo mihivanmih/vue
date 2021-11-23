@@ -18,8 +18,6 @@
 
     </div>
 
-
-
     <MyDialog v-model:show="dialogVisible">
       <PostFom
           @create="createPost"
