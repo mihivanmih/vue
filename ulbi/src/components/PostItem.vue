@@ -1,8 +1,9 @@
 <template>
   <div class="post">
+    <div>{{ post.id }}</div>
     <div>
-      <div><strong>Название:</strong>{{ post.title }}</div>
-      <div><strong>Описание:</strong>{{ post.body }}</div>
+      <div><strong>Название: </strong>{{ post.title }}</div>
+      <div><strong>Описание: </strong>{{ post.body }}</div>
     </div>
     <div class="post_btns">
       <MyButton
@@ -30,6 +31,11 @@ export default {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+}
+.post div:last-child {
+  margin-left: auto;
+}
+.post div{
+  padding-left: 20px;
 }
 </style>
