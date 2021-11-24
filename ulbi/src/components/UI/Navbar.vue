@@ -4,6 +4,7 @@
     <div class="navbar__btns">
       <router-link to="/posts">Посты</router-link>
       <router-link to="/about">О сайте</router-link>
+      <router-link to="/store">store</router-link>
     </div>
   </div>
 </template>
@@ -23,14 +24,17 @@ export default {
   align-items: center;
   padding: 0 20px;
 }
+
 .navbar__btns {
   margin-left: auto;
 }
+
 .navbar__btns a {
   padding: 0 20px;
   color: #222222;
   text-decoration: none;
 }
+
 .navbar__btns a:hover {
   color: #42b983;
 }
