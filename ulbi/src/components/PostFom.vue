@@ -2,6 +2,7 @@
   <h4>Создание поста</h4>
   <form @submit.prevent>
     <MyInput
+        v-focus
         v-model:value="post.title"
         type="text"
         placeholder="Название"
@@ -47,9 +48,11 @@ form {
   display: flex;
   flex-direction: column;
 }
+
 h4 {
   margin-bottom: 20px;
 }
+
 .newPostButton {
   align-self: flex-start;
   margin-bottom: 20px;

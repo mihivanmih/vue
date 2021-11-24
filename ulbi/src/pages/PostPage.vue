@@ -5,6 +5,7 @@
     <MyInput
         v-model:value="searchQuery"
         placeholder="Поиск..."
+        v-focus
     />
     <div class="app__btns">
       <MyButton
@@ -33,7 +34,7 @@
         v-if="!isPostsLoading"
     />
     <div v-else>Идет загрузка...</div>
-    <div ref="observer" class="observer"></div>
+    <div v-intersection="loadMorePosts" class="observer"></div>
 
     <!--    <Paginations
           :pageNumber = "0"
@@ -82,13 +83,13 @@ export default {
       this.posts.push(post)
       this.dialogVisible = false
     },
-    removePost(post){
+    removePost(post) {
       this.posts = this.posts.filter(p => p.id !== post.id)
     },
-    showDialog(){
+    showDialog() {
       this.dialogVisible = true
     },
-    changePage(pageNumber){
+    changePage(pageNumber) {
       console.log("pageNumber", pageNumber)
       this.page = pageNumber
     },
@@ -128,21 +129,10 @@ export default {
   },
   mounted() {
     this.fetchPosts()
-    const options = {
-      rootMargin: '0px',
-      threshold: 1.0
-    }
-    const callback = (entries, observer) => {
-      if(entries[0].isIntersecting && this.page < this.totalPages){
-        this.loadMorePosts()
-      }
-    }
-    const observer = new IntersectionObserver(callback, options)
-    observer.observe(this.$refs.observer)
   },
   computed: {
     sortedPosts() {
-      return [...this.posts].sort((post1, post2) =>  post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
+      return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
     },
     sortedAndSearchedPosts() {
       return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
@@ -160,12 +150,14 @@ export default {
 .app {
   padding: 20px;
 }
+
 .app__btns {
   display: flex;
   margin: 0 0 20px 0;
   justify-content: space-between;
 }
-.observer{
+
+.observer {
   height: 30px;
   position: relative;
   z-index: 333;
