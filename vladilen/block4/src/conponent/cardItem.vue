@@ -1,20 +1,31 @@
 <template>
   <div class="card">
     <h3>{{ id }} {{ title }}</h3>
-    <button class="btn" @click="open">{{ isOpenItem ? 'Закрыть' : 'Открыть' }}</button>
-    <button class="btn danger" v-if="wasRead" @click="$emit('unmark-news', id)">Отметить непрочитанной</button>
+    <app-button @action="open">{{ isOpenItem ? 'Закрыть' : 'Открыть' }}</app-button>
+    <app-button
+      @action="$emit('unmark-news', id)"
+      :color="'danger'"
+      v-if="wasRead">Отметить непрочитанной</app-button>
     <div v-if="isOpenItem">
       <hr>
       <p v-if="isOpenItem">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur debitis dolorum et ipsam
         iure laborum nam provident quibusdam. Accusantium, aspernatur exercitationem explicabo fugit nam nihil
         obcaecati perferendis quaerat repudiandae voluptates.</p>
-      <button class="btn primary" v-if="!wasRead" @click="read">Прочесть новость</button>
+      <app-button
+        color="primary"
+        v-if="!wasRead"
+        @action="read">Прочесть новость</app-button>
+
+      <app-list></app-list>
     </div>
   </div>
 </template>
 
 <script>
+import AppButton from '@/conponent/AppButton'
+import AppList from '@/conponent/AppList'
 export default {
+  components: { AppList, AppButton },
   props: {
     title: {
       type: String,

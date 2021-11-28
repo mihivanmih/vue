@@ -1,69 +1,65 @@
 <template>
   <div class="container pt-1">
     <div class="card">
-      <h2>Актуальные новости {{ now }}</h2>
-      <span> Открыто <strong>{{ openRate }}</strong> | Прочитано: <strong>{{ readRate }}</strong></span>
-      <hr>
-      <card-item
-        v-for="item in news"
-        :key="item.id"
-        :title="item.title"
-        :id="item.id"
-        :isOpen="item.isOpen"
-        :wasRead="item.wasRead"
-        @open-news="openNews"
-        @read-news="readNews"
-        @unmark-news="unmarkNews"
-      ></card-item>
+      <async-component></async-component>
+      <h2>Динамические и асинхронные компоненты</h2>
+
+      <app-button
+        :color="oneColor"
+        @action="active = 'one'"
+      >
+        One</app-button>
+
+      <app-button
+        ref="myBtn"
+        :color="twoColor"
+        @action="active = 'two'"
+      >Two</app-button>
+
     </div>
+
+    <keep-alive>
+      <component :is="componentName"></component>
+    </keep-alive>
+
   </div>
 </template>
 
 <script>
-
-import CardItem from '@/conponent/cardItem'
-
+import AppButton from '@/conponent/AppButton'
+import AppTextOne from '@/conponent/tabs/AppTextOne'
+import AppTextTwo from '@/conponent/tabs/AppTextTwo'
 export default {
-  components: { CardItem },
   data () {
     return {
-      now: new Date().toLocaleDateString(),
-      isOpen: false,
-      news: [
-        {
-          id: 1,
-          title: 'Байден победил',
-          isOpen: true,
-          wasRead: false
-        },
-        {
-          id: 2,
-          title: 'Vue 3 успешно работает',
-          wasRead: false
-        }
-      ],
-      openRate: 0,
-      readRate: 0
+      active: 'one'
     }
   },
-  methods: {
-    openNews (data) {
-      this.openRate += data + 1
+  computed: {
+    // componentName () {
+    //   return 'app-text-' + this.active
+    // },
+    componentName: {
+      get () {
+        return 'app-text-' + this.active
+      },
+      set (value) {
+        console.log('componentName')
+      }
     },
-    readNews (id) {
-      this.readRate++
-      const idx = this.news.findIndex(news => news.id === id)
-      this.news[idx].wasRead = true
+    oneColor () {
+      return this.active === 'one' ? 'primary' : ''
     },
-    unmarkNews (id) {
-      this.readRate--
-      const news = this.news.find(news => news.id === id)
-      news.wasRead = false
+    twoColor () {
+      return this.active === 'two' ? 'primary' : ''
     }
-  }
+  },
+  mounted () {
+    console.log(this.$refs.myBtn)
+  },
+  components: { AppTextTwo, AppTextOne, AppButton }
 }
 </script>
 
-<style>
-
+<style scoped>
 </style>
