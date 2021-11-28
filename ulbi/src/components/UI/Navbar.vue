@@ -1,10 +1,11 @@
 <template>
   <div class="navbar">
-    <div>Vue 3</div>
+    <div>Vue 3 </div>
     <div class="navbar__btns">
       <router-link to="/posts">Посты</router-link>
       <router-link to="/about">О сайте</router-link>
       <router-link to="/store">store</router-link>
+      <router-link to="/composition" :class="[isActive && 'router-link-active']">composition</router-link>
     </div>
   </div>
 </template>
@@ -33,6 +34,9 @@ export default {
   padding: 0 20px;
   color: #222222;
   text-decoration: none;
+}
+.navbar__btns a.router-link-active {
+  color: #e53935;
 }
 
 .navbar__btns a:hover {
