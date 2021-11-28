@@ -1,15 +1,16 @@
 <template>
   <div>
-    <h1>{{ $store.state.likes }}</h1>
-    <h1>{{ $store.getters.doubleLikes }}</h1>
-    <h1>{{ $store.state.isAuth ? 'Мы авториpизованы' : 'Необходимо авторизироваться' }}</h1>
+<!--    <h1>{{ $store.state.likes }}</h1>-->
+<!--    <h1>{{ $store.getters.doubleLikes }}</h1>-->
+<!--    <h1>{{ $store.state.isAuth ? 'Мы авториpизованы' : 'Необходимо авторизироваться' }}</h1>-->
 
-    <MyButton @click="$store.commit('incrementLikes')">Лайк</MyButton>
-    <MyButton @click="$store.commit('decrementLikes')">Дизлайк</MyButton>
+<!--    <MyButton @click="$store.commit('incrementLikes')">Лайк</MyButton>-->
+<!--    <MyButton @click="$store.commit('decrementLikes')">Дизлайк</MyButton>-->
 
     <h1>Страница с постами</h1>
     <MyInput
-        v-model:value="searchQuery"
+        :value="searchQuery"
+        @update:value="setSearchQuery"
         placeholder="Поиск..."
         v-focus
     />
@@ -22,7 +23,8 @@
       </MyButton>
 
       <MySelect
-          v-model="selectedSort"
+          :model-value="selectedSort"
+          @update:model-value="setSelectedSort"
           :options="sortOptions"
       />
 
@@ -59,6 +61,7 @@ import axios from "axios"
 import MyButton from "@/components/UI/MyButton";
 import MyInput from "@/components/UI/MyInput";
 import Paginations from "@/components/Paginations";
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
   components: {
@@ -69,22 +72,19 @@ export default {
   },
   data() {
     return {
-      posts: [], // посты
       dialogVisible: false, // диалоговое окно закрыто
-      modificatorValue: '', // модификатор который не используется
-      isPostsLoading: false,
-      selectedSort: '',
-      searchQuery: '', // поиск
-      page: 1, // номер страницы
-      limit: 10, // кол-во эл-ов на странице
-      totalPages: 0, //сколько всего страниц
-      sortOptions: [
-        {value: 'title', name: 'По названию'},
-        {value: 'body', name: 'По содержимому'},
-      ]
     }
   },
   methods: {
+    ...mapMutations({
+      setPage: 'post/setPage',
+      setSearchQuery: 'post/setSearchQuery',
+      setSelectedSort: 'post/setSelectedSort'
+    }),
+    ...mapActions({
+      loadMorePosts: 'post/loadMorePosts',
+      fetchPosts: 'post/fetchPosts'
+    }),
     createPost(post) {
       this.posts.push(post)
       this.dialogVisible = false
@@ -98,51 +98,26 @@ export default {
     changePage(pageNumber) {
       console.log("pageNumber", pageNumber)
       this.page = pageNumber
-    },
-    async fetchPosts() {
-      try {
-        this.isPostsLoading = true
-        const response = await axios.get("https://jsonplaceholder.typicode.com/posts", {
-          params: {
-            _page: this.page,
-            _limit: this.limit
-          }
-        })
-        this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
-        this.posts = response.data
-      } catch (e) {
-        alert("Ошибка")
-      } finally {
-        this.isPostsLoading = false
-      }
-    },
-    async loadMorePosts() {
-      try {
-        this.page++
-        const response = await axios.get("https://jsonplaceholder.typicode.com/posts", {
-          params: {
-            _page: this.page,
-            _limit: this.limit
-          }
-        })
-        this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit)
-        this.posts = [...this.posts, ...response.data]
-      } catch (e) {
-        alert("Ошибка")
-      } finally {
-      }
     }
   },
   mounted() {
     this.fetchPosts()
   },
   computed: {
-    sortedPosts() {
-      return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
-    },
-    sortedAndSearchedPosts() {
-      return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
-    }
+    ...mapState({
+      posts: state => state.post.posts, // посты
+      isPostsLoading: state => state.post.isPostsLoading,
+      selectedSort: state => state.post.selectedSort,
+      searchQuery: state => state.post.searchQuery, // поиск
+      page: state => state.post.page, // номер страницы
+      limit: state => state.post.limit, // кол-во эл-ов на странице
+      totalPages: state => state.post.totalPages, //сколько всего страниц
+      sortOptions: state => state.post.sortOptions
+    }),
+    ...mapGetters({
+      sortedPosts: 'post/sortedPosts',
+      sortedAndSearchedPosts: 'post/sortedAndSearchedPosts'
+    })
   },
   watch: {
     /*    page() {
